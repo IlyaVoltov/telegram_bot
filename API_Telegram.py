@@ -3,26 +3,24 @@ import time
 
 
 API_URL: str = 'https://api.telegram.org/bot'
-BOT_TOKEN: str = '6075530937:AAEy3owrjZZXv0ui8B-5SEsSZWg7H6fv1Do'
-TEXT: str = 'Wow! This is another cool update!'
-MAX_COUNTER: int = 100
-
+BOT_TOKEN: str = '6075530937:AAHs-BqrGtGAMPlSdzUQh8Bv3mHotnarqXI'
 offset: int = -2
-counter: int = 0
-chat_id: int
+timeout: int = 30
+updates: dict
 
 
-while counter < MAX_COUNTER:
+def do_something() -> None:
+    print('Был апдейт')
 
-    print('attempt =', counter)  #Чтобы видеть в консоли, что код живет
 
-    updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
+while True:
+    start_time = time.time()
+    updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}&timeout={timeout}').json()
 
     if updates['result']:
         for result in updates['result']:
             offset = result['update_id']
-            chat_id = result['message']['from']['id']
-            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={TEXT}')
+            do_something()
 
-    time.sleep(1)
-    counter += 1
+    end_time = time.time()
+    print(f'Время между запросами к Telegram Bot API: {end_time - start_time}')
